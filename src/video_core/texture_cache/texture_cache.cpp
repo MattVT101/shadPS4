@@ -3,7 +3,6 @@
 
 #include <algorithm>
 #include <limits>
-#include <vulkan/vulkan_format_traits.hpp>
 #include <xxhash.h>
 
 #include "common/assert.h"
@@ -21,6 +20,8 @@
 #include "video_core/texture_cache/host_compatibility.h"
 #include "video_core/texture_cache/texture_cache.h"
 #include "video_core/texture_cache/tile_manager.h"
+
+#include <vulkan/vulkan_format_traits.hpp>
 
 namespace VideoCore {
 
