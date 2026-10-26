@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <limits>
+#include <vulkan/vulkan_format_traits.hpp>
 #include <xxhash.h>
 
 #include "common/assert.h"
@@ -868,6 +869,17 @@ void TextureCache::RefreshImage(Image& image) {
             return;
         }
         image.cpu_hash = hash;
+    }
+
+    if (image.info.props.is_depth && image.info.num_bits != 0 &&
+        vk::componentBits(image.info.pixel_format, 0) > image.info.num_bits) {
+        LOG_WARNING(Render_Vulkan,
+                    "Skipping upload of depth image {:#x}: host format {} is wider than guest {} "
+                    "bits",
+                    image.info.guest_address, vk::to_string(image.info.pixel_format),
+                    image.info.num_bits);
+        image.flags &= ~ImageFlagBits::Dirty;
+        return;
     }
 
     image.gpu_hash = 0;
